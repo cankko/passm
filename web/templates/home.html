@@ -1,0 +1,124 @@
+{{define "title"}}List{{end}}
+{{define "style"}}{{end}}
+{{define "body"}}
+    <form method="post" action="/entry_create/">
+        <div class="row">
+            <div class="col-md-4">
+                <input class="form-control mb-3" type="text" name="source" placeholder="source..."/>
+            </div>
+            <div class="col-md-3">
+                <input class="form-control mb-3" type="text" name="user" placeholder="user..."/>
+            </div>
+            <div class="col-md-3">
+                <input class="form-control mb-3" type="text" name="password" placeholder="password..." required/>
+            </div>
+            <div class="col-md-2">
+                <button class="btn btn-primary" type="submit" id="button-addon">add new</button>
+            </div>
+        </div>
+    </form>
+
+    <br><br>
+
+    {{ if .Data }}
+    <div class="table-responsive">
+        <table class="table table-striped table-borderless" style="white-space: nowrap">
+            <thead>
+                <tr>
+                    <th>Source</th>
+                    <th>User</th>
+                    <th>Password</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {{ range .Data }}
+                <tr>
+                    <td><button type="button" class="btn btn-primary btn-sm" onclick="openLink('{{.Source}}')">&#128279;</button> {{.Source}}</td>
+                    <td><button class="btn btn-primary btn-sm" onclick="copyInput('{{.User}}')">&copy;</button> {{.User}}</td>
+                    <td><a class="btn btn-primary btn-sm" onclick="copyInput('{{.Password}}')">&copy;</a>
+                        <input type="password" id="password_{{.ID}}" value="{{.Password}}" disabled/> <button type="button" onclick="showPw('{{.ID}}')">&#128065;</button>
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#entryModal"
+                            data-bs-id="{{.ID}}"
+                            data-bs-source="{{.Source}}"
+                            data-bs-user="{{.User}}"
+                            data-bs-password="{{.Password}}">&#128393;</button> &nbsp;
+                        <a href="/entry_delete/{{.ID}}/" class="btn btn-sm btn-danger" onclick="return confirm('are you sure delete entry?')">X</a>
+                    </td>
+                </tr>
+                {{ end }}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="entryModal" tabindex="-1" aria-labelledby="entryModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header"><h5 class="modal-title">Update</h5></div>
+                <div class="modal-body">
+                    <div class="row">
+                        <input type="hidden" class="form-control" id="id" />
+                        <div class="col-md-4 mb-1"> <input type="text" class="form-control" id="source" /> </div>
+                        <div class="col-md-4 mb-1"> <input type="text" class="form-control" id="user" /> </div>
+                        <div class="col-md-4 mb-1"> <input type="text" class="form-control" id="password" /> </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="update()">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{end}}
+{{end}}
+{{define "script"}}
+<script>
+    function update(id) {
+        const xhttp = new XMLHttpRequest();
+        xhttp.open("POST", "/entry_update/", true);
+        xhttp.setRequestHeader(
+            "Content-type",
+            "application/x-www-form-urlencoded",
+        );
+        let data =
+            "id=" + document.getElementById("id").value +
+            "&source=" + document.getElementById("source").value +
+            "&user=" + document.getElementById("user").value +
+            "&password=" + document.getElementById("password").value;
+        xhttp.send(data);
+        location.reload();
+    }
+
+    var entryModal = document.getElementById("entryModal");
+    entryModal.addEventListener("show.bs.modal", function (event) {
+        // Button that triggered the modal
+        var button = event.relatedTarget;
+
+        document.getElementById("id").value = button.getAttribute("data-bs-id");
+        document.getElementById("source").value = button.getAttribute("data-bs-source");
+        document.getElementById("user").value = button.getAttribute("data-bs-user");
+        document.getElementById("password").value = button.getAttribute("data-bs-password");
+    });
+
+    function openLink(url) {
+        window.open(url, "_blank");
+    }
+
+    function copyInput(copyValue) {
+        navigator.clipboard.writeText(copyValue);
+    }
+
+    function showPw(id) {
+        var x = document.getElementById("password_" + id);
+        if (x.type === "password") {
+            x.type = "text";
+        } else {
+            x.type = "password";
+        }
+    }
+</script>
+{{end}}
