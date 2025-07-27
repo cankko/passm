@@ -1,0 +1,16 @@
+{{define "title"}}Login{{end}}
+{{define "style"}}{{end}}
+{{define "body"}}
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+            {{if .Data.Msg}}<div class="alert alert-danger" role="alert">{{ .Data.Msg }}</div>{{end}}
+            <form method="post" action="/login/try/">
+                <div class="input-group mb-3">
+                    <input type="password" class="form-control form-control-lg" name="passname" placeholder="enter password" required/>
+                    <button class="btn btn-primary" type="submit">login</button>
+                </div>
+            </form>
+        </div>
+    </div>
+{{end}}
+{{define "script"}}{{end}}
