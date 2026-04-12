@@ -11,6 +11,3 @@ services:
       - TZ=Europe/Berlin
     volumes:
       - data:/data   # optional, falls deine App Daten speichert
-
-volumes:
-  passm_data:

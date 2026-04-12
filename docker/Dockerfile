@@ -18,6 +18,9 @@ RUN go mod download
 # Build the binary.
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o passm ./cmd/main.go
 
+# remove all repository files except data, web folder and build binary file
+RUN find . -maxdepth 1 ! -name 'data' ! -name 'web' ! -name 'passm' ! -name '.' -exec rm -rf {} +
+
 # Use the official Debian slim image for a lean production container.
 # https://hub.docker.com/_/debian
 # https://docs.docker.com/develop/develop-images/multistage-build/#use-multi-stage-builds
