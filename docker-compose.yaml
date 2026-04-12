@@ -1,0 +1,16 @@
+services:
+  passm:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: passm
+    restart: unless-stopped
+    ports:
+      - "3200:3200"   # ggf. anpassen, falls deine App einen anderen Port nutzt
+    environment:
+      - TZ=Europe/Berlin
+    volumes:
+      - passm_data:/data   # optional, falls deine App Daten speichert
+
+volumes:
+  passm_data:
