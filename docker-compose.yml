@@ -5,6 +5,8 @@ services:
       context: .
       dockerfile: docker/Dockerfile
     restart: unless-stopped
+    expose: 
+      - "3200"
     ports:
       - "3200:3200"   # ggf. anpassen, falls deine App einen anderen Port nutzt
     environment:

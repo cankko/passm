@@ -6,17 +6,17 @@ WORKDIR /app
 
 RUN apt-get update && apt-get install -y git-all
 RUN git clone https://bitbucket.org/cankko/passm.git
-RUN mv passm/* /app/
+
 # Retrieve application dependencies.
 # This allows the container build to reuse cached dependencies.
 # Expecting to copy go.mod and if present go.sum.
-RUN go mod download
+RUN cd passm && go mod download
 
 # Build the binary.
-RUN go build -o passmApp ./cmd/main.go
+RUN cd passm && go build -o passmApp ./cmd/main.go
 
 # remove all repository files except data, web folder and build binary file
-# RUN find . -maxdepth 1 ! -name 'data' ! -name 'web' ! -name 'passmApp' ! -name '.' -exec rm -rf {} +
+RUN cd passm && find . -maxdepth 1 ! -name 'data' ! -name 'web' ! -name 'passmApp' ! -name '.' -exec rm -rf {} +
 
 # Use the official Debian slim image for a lean production container.
 # https://hub.docker.com/_/debian
@@ -28,7 +28,7 @@ RUN set -x && apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -
     rm -rf /var/lib/apt/lists/*
 
 # Copy the binary to the production image from the builder stage.
-COPY --from=builder /app/* .
+COPY --from=builder /app/passm .
 
 # Run the web service on container startup.
 CMD ["./passmApp"]

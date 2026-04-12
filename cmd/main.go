@@ -33,7 +33,7 @@ func main() {
 	router.HandleFunc(http.MethodPost+" /entry_update/", handler.UpdateEntryHandler)
 
 	server := &http.Server{
-		Addr:    "127.0.0.1:3200",
+		Addr:    ":3200",
 		Handler: middleware(router),
 	}
 
