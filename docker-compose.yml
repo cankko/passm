@@ -2,7 +2,7 @@ services:
   app:
     container_name: passm
     build:
-      context: .
+      context: https://github.com/cankko/passm.git
       dockerfile: docker/Dockerfile
     restart: unless-stopped
     expose: 
