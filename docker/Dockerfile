@@ -5,7 +5,7 @@ FROM golang:1.25-bookworm AS builder
 WORKDIR /app
 
 RUN apt-get update && apt-get install -y git-all
-RUN git clone https://bitbucket.org/cankko/passm.git
+RUN git clone https://github.com/cankko/passm.git
 
 # Retrieve application dependencies.
 # This allows the container build to reuse cached dependencies.
